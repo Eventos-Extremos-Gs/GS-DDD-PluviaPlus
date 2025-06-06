@@ -1,12 +1,16 @@
 package globalsolution.pluviaplus.repository;
 
+import globalsolution.pluviaplus.dto.UsuarioDto;
 import globalsolution.pluviaplus.infrastructure.DatabaseConfig;
 import globalsolution.pluviaplus.models.TipoUsuario;
 import globalsolution.pluviaplus.models.Usuario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class UsuarioRepository {
@@ -113,6 +117,31 @@ public class UsuarioRepository {
 
         return Optional.empty();
     }
+
+    public List<UsuarioDto> buscarNomeETipo() {
+        List<UsuarioDto> usuarios = new ArrayList<>();
+        String sql = "SELECT id_usuario, nm_usuario, email, tp_usuario FROM PP_USUARIO";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id_usuario");
+                String nm_usuario = rs.getString("nm_usuario");
+                String email = rs.getString("email");
+                TipoUsuario tp_usuario = TipoUsuario.valueOf(rs.getString("tp_usuario"));
+
+                usuarios.add(new UsuarioDto(id, nm_usuario, email, tp_usuario));
+            }
+
+        } catch (SQLException e) {
+            LOGGER.error("Erro ao buscar usuários", e);
+        }
+
+        return usuarios;
+    }
+
 
     public Map<String, Long> contagemPorTipo() {
         Map<String, Long> contagem = new HashMap<>();

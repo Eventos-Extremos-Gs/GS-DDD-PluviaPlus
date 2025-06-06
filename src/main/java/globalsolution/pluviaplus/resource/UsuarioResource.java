@@ -15,6 +15,13 @@ public class UsuarioResource {
 
     private final UsuarioBO bo = new UsuarioBO();
 
+    @GET // retorna nome e função de todos os usuários
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNomeEFuncoes() {
+        List<UsuarioDto> lista = bo.listarNomeEFuncoes();
+        return Response.ok(lista).build();
+    }
+
     @POST // cria um novo usuario no sistema
     public Response create(UsuarioDto dto) {
         bo.create(dto);

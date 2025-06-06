@@ -27,6 +27,11 @@ public class UsuarioBO {
                 .collect(Collectors.toList());
     }
 
+    public List<UsuarioDto> listarNomeEFuncoes() {
+        return repository.buscarNomeETipo();
+    }
+
+
     public UsuarioDto getById(int id) {
         Optional<Usuario> usuario = repository.getById(id);
         return usuario.map(this::toDto)
