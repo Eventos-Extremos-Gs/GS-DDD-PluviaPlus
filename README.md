@@ -47,8 +47,8 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 **Resposta**:
 ```json
 [
-  { "id": 1, "nome": "Gabriel Andrade", "tipo": "Técnico" },
-  { "id": 2, "nome": "Laura Ribeiro", "tipo": "Pesquisador" }
+  { "id_Usuario": 1, "nm_Usuario": "Gabriel Andrade", "tp_Usuario": "Tecnico" },
+  { "id_Usuario": 2, "nm_Usuario": "Laura Ribeiro", "tp_Usuario": "Pesquisador" }
 ]
 ```
 
@@ -57,24 +57,26 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 **Requisição**:
 ```json
 {
-  "nome": "João Silva",
-  "email": "joao@pluvia.com",
-  "tipo": "Admin"
+  "id_Usuario": 6,
+  "nm_Usuario": "Lucas Silva",
+  "email": "lucas@pluvia.com",
+  "tp_Usuario": "Analista"
 }
+
 ```
 
 #### `GET /usuarios/estatisticas/quantidade`
 **Descrição**: Retorna a quantidade total de usuários  
 **Resposta**:
 ```json
-{ "totalUsuarios": 5 }
+{ "5": }
 ```
 
 #### `GET /usuarios/estatisticas/tipos`
 **Descrição**: Agrupa por tipo de usuário  
 **Resposta**:
 ```json
-{ "Técnico": 2, "Admin": 1, "Pesquisador": 1, "Analista": 1 }
+{ "Tecnico": 2, "Admin": 1, "Pesquisador": 1, "Analista": 1 }
 ```
 
 #### `DELETE /usuarios/{id}`
@@ -90,10 +92,10 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 ```json
 [
   {
-    "id_dispositivo": 1,
+    "idDispositivo": 1,
     "nome": "C.A.P.T.A. - Petrolina",
     "modelo": "PLV-X100",
-    "id_localizacao": 1
+    "idLocalizacao": 1
   }
 ]
 ```
@@ -103,10 +105,10 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 **Resposta**:
 ```json
 {
-  "id_dispositivo": 2,
+  "idDispositivo": 2,
   "nome": "C.A.P.T.A. - Campinas",
   "modelo": "PLV-X200",
-  "id_localizacao": 2
+  "idLocalizacao": 2
 }
 ```
 
@@ -114,10 +116,10 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 **Requisição**:
 ```json
 {
-  "id_dispositivo": 6,
-  "nome": "C.A.P.T.A. - Natal",
+  "idDispositivo": 9,
+  "nome": "C.A.P.T.A. - Teresina - Extra",
   "modelo": "PLV-X150",
-  "id_localizacao": 6
+  "idLocalizacao": 5
 }
 ```
 
@@ -125,9 +127,37 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 **Resposta**:
 ```json
 {
-  "PLV-X100": 3,
-  "PLV-X200": 1,
-  "PLV-X300": 1
+    "Modelo": {
+        "PLV-X300": 2,
+        "PLV-X200": 1,
+        "PLV-X100": 3,
+        "PLV-X150": 2
+    },
+    "Modelos por cidade": {
+        "PLV-X300": [
+            "Cuiabá",
+            "Boa Vista"
+        ],
+        "PLV-X200": [
+            "Campina Grande"
+        ],
+        "PLV-X100": [
+            "Petrolina",
+            "Cuiabá",
+            "Teresina"
+        ],
+        "PLV-X150": [
+            "Cuiabá",
+            "Cuiabá"
+        ]
+    },
+    "Quantidade de modelos em cada localizacao": {
+        "Campina Grande": 1,
+        "Teresina": 1,
+        "Boa Vista": 1,
+        "Cuiabá": 4,
+        "Petrolina": 1
+    }
 }
 ```
 
@@ -141,10 +171,10 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 ```json
 [
   {
-    "id_producao": 1,
-    "id_dispositivo": 1,
-    "data_producao": "2025-05-25",
-    "litros_gerados": 12.5
+    "idProducao": 1,
+    "idDispositivo": 1,
+    "dataProducao": "2025-05-25",
+    "litrosGerados": 12.5
   }
 ]
 ```
@@ -153,9 +183,10 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 **Requisição**:
 ```json
 {
-  "id_dispositivo": 1,
-  "data_producao": "2025-06-08",
-  "litros_gerados": 10.7
+  "idProducao": 7,
+  "idDispositivo": 2,
+  "dataProducao": "2025-06-08",
+  "litrosGerados": 11.9
 }
 ```
 
@@ -163,8 +194,11 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 **Resposta**:
 ```json
 {
-  "C.A.P.T.A. - Petrolina": 12.5,
-  "C.A.P.T.A. - Cuiabá": 14.7
+    "1": 12.5,
+    "2": 33.4,
+    "3": 14.7,
+    "4": 11.9,
+    "5": 13.4
 }
 ```
 
@@ -177,10 +211,10 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 ```json
 [
   {
-    "id_impacto": 1,
-    "id_producao": 1,
-    "co2_economizado_kg": 1.25,
-    "pessoas_beneficiadas": 10
+    "idImpacto": 1,
+    "idProducao": 1,
+    "co2Economizado_kg": 1.25,
+    "pessoasBeneficiadas": 10
   }
 ]
 ```
@@ -189,8 +223,8 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 **Resposta**:
 ```json
 {
-  "total_pessoas": 50,
-  "media_co2": 1.25
+    "totalCO2": 6.27,
+    "totalPessoas": 50
 }
 ```
 
@@ -203,11 +237,11 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 ```json
 [
   {
-    "id_previsao": 1,
-    "id_localizacao": 1,
-    "data_previsao": "2025-05-26",
-    "umidade_relativa": 67.3,
-    "temperatura_celsius": 33.5
+    "idPrevisao": 1,
+    "idLocalizacao": 1,
+    "dataPrevisao": "2025-05-26",
+    "umidadeRelativa": 67.3,
+    "temperaturaCelsius": 33.5
   }
 ]
 ```
@@ -220,23 +254,24 @@ O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, cria
 **Resposta**:
 ```json
 [
-  {
-    "id_relatorio": 1,
-    "tipo": "diário",
-    "data_geracao": "2025-05-26",
-    "id_usuario": 1
-  }
+   {
+        "idRelatorio": 1,
+        "tipo": "diario",
+        "dataGeracao": "2025-05-26",
+        "idUsuario": 1
+    },
 ]
 ```
 
 #### `POST /relatorios`
 **Requisição**:
 ```json
-{
-  "tipo": "impacto",
-  "data_geracao": "2025-06-08",
-  "id_usuario": 3
-}
+    {
+        "idRelatorio": 7,
+        "tipo": "impacto",
+        "dataGeracao": "2025-07-10",
+        "idUsuario": 4
+    }
 ```
 
 #### `DELETE /relatorios/{id}`
