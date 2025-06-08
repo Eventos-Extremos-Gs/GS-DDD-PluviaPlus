@@ -1,3 +1,4 @@
+
 # CAPTA - Coletor Atmosférico Portátil de Tratamento de Água
 
 ## Participantes
@@ -9,21 +10,20 @@
 
 ## 🌎 Visão Geral do Projeto
 
-O projeto **CAPTA** é uma aplicação Java Quarkus desenvolvida para dar suporte ao dispositivo ambiental **C.A.P.T.A.**, que transforma a umidade do ar em água potável. A plataforma foi projetada para monitorar, armazenar e analisar dados de produção de água, impacto ambiental, previsões climáticas e localização dos dispositivos em campo.
-
-O backend funciona como núcleo do ecossistema, integrando dados em tempo real a interfaces frontend para visualização e gestão.
+O projeto **CAPTA** é um sistema backend desenvolvido em Java com Quarkus, criado para gerenciar e monitorar os dados ambientais coletados pelo dispositivo C.A.P.T.A., que transforma umidade do ar em água potável. A plataforma é capaz de registrar produção hídrica, impactos ambientais, previsões climáticas, alertas e relatórios — todos integrados com banco de dados Oracle.
 
 ---
 
 ## ⚙️ Funcionalidades Principais
 
-- **Gestão de Usuários**: Cadastro, listagem e associação de relatórios.
-- **Gestão de Dispositivos**: Registro, localização e modelo dos dispositivos.
-- **Registro de Produção de Água**: Quantidade diária produzida por dispositivo.
-- **Visualização de Impacto Ambiental**: Economia de CO₂ e pessoas beneficiadas.
-- **Previsão Climática**: Umidade e temperatura por local.
-- **Alertas Estratégicos**: Geração de alertas baseados em condições climáticas e operacionais.
-- **Relatórios**: Registro de relatórios gerados por usuários.
+- Cadastro e estatísticas de usuários
+- Registro e listagem de dispositivos CAPTA
+- Produção diária de água por dispositivo
+- Impactos ambientais: economia de CO₂ e beneficiários
+- Simulação de condições climáticas
+- Geração e exclusão de relatórios
+- Alertas por risco, produção e clima
+- Visualização por região/localização
 
 ---
 
@@ -31,128 +31,242 @@ O backend funciona como núcleo do ecossistema, integrando dados em tempo real a
 
 - **Java 21**
 - **Quarkus Framework**
-- **Banco de Dados Oracle**
-- **JDBC + SQL puro**
-- **Arquitetura em Camadas (DTOs, BOs, Repositories, Resources)**
-- **Deploy local com Docker (opcional)**
+- **Jakarta REST (JAX-RS)**
+- **JDBC + Oracle SQL**
+- **SLF4J para logging**
+- **Arquitetura em camadas (DTO, BO, Repository, Resource)**
 
 ---
 
-## 🔌 Estrutura da API (Exemplo de Endpoints)
+## 🔌 Endpoints da API RESTful (com exemplos)
 
-### 📁 Rotas de Usuários (`/usuarios`)
+### 🧑‍💻 `/usuarios`
 
-#### 1. Criar Usuário  
-`POST /usuarios`  
-**Body:**
+#### `GET /usuarios`
+**Descrição**: Lista nome e tipo dos usuários  
+**Resposta**:
+```json
+[
+  { "id": 1, "nome": "Gabriel Andrade", "tipo": "Técnico" },
+  { "id": 2, "nome": "Laura Ribeiro", "tipo": "Pesquisador" }
+]
+```
+
+#### `POST /usuarios`
+**Descrição**: Cria um novo usuário  
+**Requisição**:
 ```json
 {
-  "nome": "Gabriel Andrade",
-  "email": "gabriel@pluvia.com",
-  "tipo": "Técnico"
+  "nome": "João Silva",
+  "email": "joao@pluvia.com",
+  "tipo": "Admin"
 }
 ```
 
-#### 2. Listar Usuários  
-`GET /usuarios`  
-**Retorno:**
+#### `GET /usuarios/estatisticas/quantidade`
+**Descrição**: Retorna a quantidade total de usuários  
+**Resposta**:
+```json
+{ "totalUsuarios": 5 }
+```
+
+#### `GET /usuarios/estatisticas/tipos`
+**Descrição**: Agrupa por tipo de usuário  
+**Resposta**:
+```json
+{ "Técnico": 2, "Admin": 1, "Pesquisador": 1, "Analista": 1 }
+```
+
+#### `DELETE /usuarios/{id}`
+**Descrição**: Remove um usuário
+
+---
+
+### 📟 `/dispositivos`
+
+#### `GET /dispositivos`
+**Descrição**: Lista todos os dispositivos  
+**Resposta**:
 ```json
 [
   {
-    "id": 1,
-    "nome": "Gabriel Andrade",
-    "email": "gabriel@pluvia.com",
-    "tipo": "Técnico"
+    "id_dispositivo": 1,
+    "nome": "C.A.P.T.A. - Petrolina",
+    "modelo": "PLV-X100",
+    "id_localizacao": 1
+  }
+]
+```
+
+#### `GET /dispositivos/{id}`
+**Descrição**: Detalhes de um dispositivo específico  
+**Resposta**:
+```json
+{
+  "id_dispositivo": 2,
+  "nome": "C.A.P.T.A. - Campinas",
+  "modelo": "PLV-X200",
+  "id_localizacao": 2
+}
+```
+
+#### `POST /dispositivos`
+**Requisição**:
+```json
+{
+  "id_dispositivo": 6,
+  "nome": "C.A.P.T.A. - Natal",
+  "modelo": "PLV-X150",
+  "id_localizacao": 6
+}
+```
+
+#### `GET /dispositivos/resumo`
+**Resposta**:
+```json
+{
+  "PLV-X100": 3,
+  "PLV-X200": 1,
+  "PLV-X300": 1
+}
+```
+
+---
+
+### 💧 `/producaoagua`
+
+#### `GET /producaoagua`
+**Descrição**: Lista registros de produção de água  
+**Resposta**:
+```json
+[
+  {
+    "id_producao": 1,
+    "id_dispositivo": 1,
+    "data_producao": "2025-05-25",
+    "litros_gerados": 12.5
+  }
+]
+```
+
+#### `POST /producaoagua`
+**Requisição**:
+```json
+{
+  "id_dispositivo": 1,
+  "data_producao": "2025-06-08",
+  "litros_gerados": 10.7
+}
+```
+
+#### `GET /producaoagua/estatisticas/volume-por-dispositivo`
+**Resposta**:
+```json
+{
+  "C.A.P.T.A. - Petrolina": 12.5,
+  "C.A.P.T.A. - Cuiabá": 14.7
+}
+```
+
+---
+
+### 🌿 `/impactos`
+
+#### `GET /impactos`
+**Resposta**:
+```json
+[
+  {
+    "id_impacto": 1,
+    "id_producao": 1,
+    "co2_economizado_kg": 1.25,
+    "pessoas_beneficiadas": 10
+  }
+]
+```
+
+#### `GET /impactos/estatisticas/totais`
+**Resposta**:
+```json
+{
+  "total_pessoas": 50,
+  "media_co2": 1.25
+}
+```
+
+---
+
+### 🌦️ `/previsao-climatica/simulada`
+
+#### `GET`
+**Resposta**:
+```json
+[
+  {
+    "id_previsao": 1,
+    "id_localizacao": 1,
+    "data_previsao": "2025-05-26",
+    "umidade_relativa": 67.3,
+    "temperatura_celsius": 33.5
   }
 ]
 ```
 
 ---
 
-### 🌍 Rotas de Localização (`/localizacoes`)
+### 📊 `/relatorios`
 
-#### 1. Listar Localizações  
-`GET /localizacoes`  
-Retorna as coordenadas e cidades monitoradas.
-
----
-
-### 💧 Rotas de Produção de Água (`/producoes`)
-
-#### 1. Registrar Produção  
-`POST /producoes`  
-**Body:**
+#### `GET /relatorios`
+**Resposta**:
 ```json
-{
-  "id_dispositivo": 1,
-  "data_producao": "2025-05-25",
-  "litros_gerados": 12.5
-}
+[
+  {
+    "id_relatorio": 1,
+    "tipo": "diário",
+    "data_geracao": "2025-05-26",
+    "id_usuario": 1
+  }
+]
 ```
 
----
-
-### 📊 Rotas de Impacto Ambiental (`/impactos`)
-
-#### 1. Obter Impacto por Produção  
-`GET /impactos/{id_producao}`  
-Retorna a economia de CO₂ e pessoas beneficiadas.
-
----
-
-### 🔔 Rotas de Alertas (`/alertas`)
-
-#### 1. Gerar ou Listar Alertas por Localização  
-`GET /alertas?local=1`  
-Exibe mensagens como “baixa produção”, “clima favorável”, etc.
-
----
-
-### 🌡️ Rotas de Previsão Climática (`/previsoes`)
-
-#### 1. Previsão por Região  
-`GET /previsoes/{id_localizacao}`  
-Exibe temperatura e umidade previstas.
-
----
-
-### 📝 Rotas de Relatórios (`/relatorios`)
-
-#### 1. Gerar Relatório  
-`POST /relatorios`  
-**Body:**
+#### `POST /relatorios`
+**Requisição**:
 ```json
 {
   "tipo": "impacto",
-  "data_geracao": "2025-05-26",
-  "id_usuario": 1
+  "data_geracao": "2025-06-08",
+  "id_usuario": 3
 }
 ```
 
----
-
-## 📎 Repositório do Projeto
-
-[🔗 GitHub - GS-DDD-PluviaPlus](https://github.com/Eventos-Extremos-Gs/GS-DDD-PluviaPlus)
+#### `DELETE /relatorios/{id}`
+**Descrição**: Remove um relatório
 
 ---
 
 ## 📊 Estrutura do Banco de Dados
 
+Tabelas:
 - `PP_USUARIO`
 - `PP_LOCALIZACAO`
+- `PP_AREA_RISCO`
 - `PP_DISPOSITIVO`
 - `PP_PRODUCAO_AGUA`
 - `PP_IMPACTO`
 - `PP_PREVISAO_CLIMATICA`
 - `PP_ALERTA`
-- `PP_AREA_RISCO`
 - `PP_RELATORIO`
+
+---
+
+## 📎 Repositório
+
+[🔗 GitHub - GS-DDD-PluviaPlus](https://github.com/Eventos-Extremos-Gs/GS-DDD-PluviaPlus)
 
 ---
 
 ## 📌 Observações
 
-- O projeto está preparado para integração com o frontend via REST.
-- O backend foi validado com dados simulados inseridos diretamente no banco Oracle.
-- Estrutura normalizada em 3FN e scripts de criação incluídos no repositório.
+- API pronta para integração com frontend.
+- Banco relacional normalizado em 3FN.
+- Dados simulados inseridos via script.
