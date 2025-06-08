@@ -18,7 +18,7 @@ public class DispositivoResource {
 
     @POST // registra um novo dispositivo
     public Response create(DispositivoDto dto) {
-        bo.registrar(dto);
+        bo.create(dto);
         return Response.status(Response.Status.CREATED).build();
     }
 

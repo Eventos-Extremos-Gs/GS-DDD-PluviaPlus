@@ -16,7 +16,7 @@ public class DispositivoBO {
 
     private final DispositivoRepository repository = new DispositivoRepository();
 
-    public void registrar(DispositivoDto dto) {
+    public void create(DispositivoDto dto) {
         validate(dto);
         Dispositivo dispositivo = toEntity(dto);
         repository.add(dispositivo);

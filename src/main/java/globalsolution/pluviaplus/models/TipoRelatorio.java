@@ -5,5 +5,5 @@ public enum TipoRelatorio {
     semanal,
     impacto,
     customizado,
-    outros
+    mensal
 }
