@@ -300,6 +300,8 @@ Tabelas:
 
 ---
 
+## ▶️ Link da explicação no YouTube: (https://youtu.be/_ByDjPL2NpQ?si=U0CZBqOMi3nH_dSX)
+
 ## 📌 Observações
 
 - API pronta para integração com frontend.
